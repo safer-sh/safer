@@ -1,0 +1,19 @@
+{
+  "name": "@safer-sh/mcp",
+  "version": "0.1.0",
+  "description": "MCP interface for Safer wallet",
+  "main": "index.js",
+  "bin": {
+    "safer-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@safer-sh/core": "^0.1.0",
+    "@safer-sh/common": "^0.1.0",
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "zod": "^3.22.4"
+  }
+} 

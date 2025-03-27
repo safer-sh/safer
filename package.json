@@ -1,0 +1,28 @@
+{
+  "name": "safer",
+  "version": "0.1.0",
+  "description": "Minimal Safe wallet CLI with supply chain attack risk mitigation",
+  "private": true,
+  "bin": {
+    "safer": "./cli/index.js"
+  },
+  "workspaces": [
+    "core",
+    "cli",
+    "ledger-signer",
+    "common",
+    "mcp"
+  ],
+  "scripts": {
+    "start": "node cli/index.js",
+    "start:mcp": "node mcp/index.js",
+    "install:all": "npm install && npm run install:workspaces",
+    "install:workspaces": "npm install --workspaces",
+    "clean": "echo 'Please manually delete node_modules directories'",
+    "build": "npm run --workspaces build"
+  },
+  "resolutions": {
+    "elliptic": "^6.6.1",
+    "**/elliptic": "^6.6.1"
+  }
+}
