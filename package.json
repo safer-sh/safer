@@ -19,7 +19,9 @@
     "install:all": "npm install && npm run install:workspaces",
     "install:workspaces": "npm install --workspaces",
     "clean": "echo 'Please manually delete node_modules directories'",
-    "build": "npm run --workspaces build"
+    "build": "npm run --workspaces build",
+    "publish-all": "npm run build && npm run publish-packages",
+    "publish-packages": "npm publish --workspace=common && npm publish --workspace=core && npm publish --workspace=ledger-signer && npm publish --workspace=cli && npm publish --workspace=mcp"
   },
   "resolutions": {
     "elliptic": "^6.6.1",

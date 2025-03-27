@@ -4,8 +4,30 @@
   "description": "Common utilities and configuration for SAFER wallet",
   "main": "index.js",
   "type": "commonjs",
-  "private": true,
   "dependencies": {
-    "ethers": "5.7.2"
+    "ethers": "^5.7.2"
+  },
+  "scripts": {
+    "build": "echo 'No build step required for common'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safer-sh/safer.git"
+  },
+  "keywords": [
+    "ethereum",
+    "safe",
+    "multisig",
+    "wallet",
+    "utilities"
+  ],
+  "author": "zhixian@unipass",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/safer-sh/safer/issues"
+  },
+  "homepage": "https://github.com/safer-sh/safer#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }

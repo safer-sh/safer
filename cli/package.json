@@ -6,12 +6,34 @@
   "bin": {
     "safer": "./index.js"
   },
-  "private": true,
   "dependencies": {
-    "@safer-sh/core": "0.1.0",
-    "@safer-sh/common": "0.1.0",
-    "@safer-sh/ledger-signer": "0.1.0",
-    "commander": "13.0.0",
-    "ethers": "5.7.2"
+    "@safer-sh/core": "^0.1.0",
+    "@safer-sh/common": "^0.1.0",
+    "@safer-sh/ledger-signer": "^0.1.0",
+    "commander": "^13.0.0",
+    "ethers": "^5.7.2"
+  },
+  "scripts": {
+    "build": "chmod +x ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safer-sh/safer.git"
+  },
+  "keywords": [
+    "ethereum",
+    "safe",
+    "multisig",
+    "wallet",
+    "cli"
+  ],
+  "author": "zhixian@unipass",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/safer-sh/safer/issues"
+  },
+  "homepage": "https://github.com/safer-sh/safer#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }

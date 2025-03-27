@@ -8,12 +8,34 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "build": "chmod +x ./index.js"
   },
   "dependencies": {
-    "@safer-sh/core": "0.1.0",
-    "@safer-sh/common": "0.1.0",
-    "@modelcontextprotocol/sdk": "1.7.0",
-    "zod": "3.22.4"
+    "@safer-sh/core": "^0.1.0",
+    "@safer-sh/common": "^0.1.0",
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "zod": "^3.22.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safer-sh/safer.git"
+  },
+  "keywords": [
+    "ethereum",
+    "safe",
+    "multisig",
+    "wallet",
+    "mcp",
+    "ai",
+    "agent"
+  ],
+  "author": "zhixian@unipass",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/safer-sh/safer/issues"
+  },
+  "homepage": "https://github.com/safer-sh/safer#readme",
+  "publishConfig": {
+    "access": "public"
   }
 } 
