@@ -5,9 +5,9 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "@safe-global/protocol-kit": "^1.3.0",
-    "@safe-global/safe-core-sdk-types": "^2.3.0",
-    "@safe-global/safe-ethers-lib": "^1.9.4",
-    "ethers": "^5.7.2"
+    "@safe-global/protocol-kit": "1.3.0",
+    "@safe-global/safe-core-sdk-types": "2.3.0",
+    "@safe-global/safe-ethers-lib": "1.9.4",
+    "ethers": "5.7.2"
   }
 } 

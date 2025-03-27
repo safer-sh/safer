@@ -6,6 +6,6 @@
   "type": "commonjs",
   "private": true,
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "5.7.2"
   }
 }

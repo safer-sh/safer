@@ -5,9 +5,9 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "@ledgerhq/hw-app-eth": "^6.42.8",
-    "@ledgerhq/hw-transport-node-hid": "^6.29.5",
-    "@safer-sh/core": "^0.1.0",
-    "ethers": "^5.7.2"
+    "@ledgerhq/hw-app-eth": "6.42.8",
+    "@ledgerhq/hw-transport-node-hid": "6.29.5",
+    "@safer-sh/core": "0.1.0",
+    "ethers": "5.7.2"
   }
 } 
