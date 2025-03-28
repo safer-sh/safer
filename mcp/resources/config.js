@@ -15,12 +15,42 @@ function registerConfigResources(server) {
     "config://global",
     async (uri) => {
       const config = await configManager.readConfig();
-      return {
-        contents: [{
-          uri: uri.href,
-          text: JSON.stringify(config, null, 2)
-        }]
+      
+      // Check if this is a new installation
+      const isNewInstallation = !config.chain && !config.rpcUrl && !config.defaultSafe;
+      
+      // Always provide security guidance as part of response metadata
+      const securityAdvisory = {
+        securityWarning: "NEVER use private keys for wallets that hold real assets!",
+        recommendation: "For real assets, ALWAYS use a hardware wallet (Ledger)",
+        privateKeyWarning: "Private keys are stored in plaintext and should ONLY be used for testing",
+        walletPriority: ["ledger", "privkey"]
       };
+      
+      // Enhanced configuration with security advisory
+      const enhancedConfig = {
+        ...config,
+        _securityAdvisory: securityAdvisory
+      };
+      
+      // Always suggest security-focused prompts, but prioritize initialization for new installs
+      if (isNewInstallation) {
+        return {
+          contents: [{
+            uri: uri.href,
+            text: JSON.stringify(enhancedConfig, null, 2)
+          }],
+          suggestedPrompts: ["initializationGuide", "walletSecurityGuide", "walletSetupGuide"]
+        };
+      } else {
+        return {
+          contents: [{
+            uri: uri.href,
+            text: JSON.stringify(enhancedConfig, null, 2)
+          }],
+          suggestedPrompts: ["walletSecurityGuide"]
+        };
+      }
     }
   );
 }

@@ -6,6 +6,7 @@ const { registerTransferPrompts } = require('./transfer');
 const { registerAdminPrompts } = require('./admin');
 const { registerTransactionPrompts } = require('./transaction');
 const { registerConfigPrompts } = require('./config');
+const { registerWalletPrompts } = require('./wallet');
 
 /**
  * Register all prompts to the server
@@ -16,6 +17,7 @@ function registerAllPrompts(server) {
   registerAdminPrompts(server);
   registerTransactionPrompts(server);
   registerConfigPrompts(server);
+  registerWalletPrompts(server);
 }
 
 module.exports = { registerAllPrompts }; 

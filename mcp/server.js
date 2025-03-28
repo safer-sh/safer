@@ -15,7 +15,7 @@ function createMcpServer() {
   // Create MCP server instance
   const server = new McpServer({
     name: "Safer Wallet",
-    version: "0.1.0",
+    version: "0.1.1",
     options: {
       // Increase default timeout to 5 minutes for long-running operations like transaction execution
       timeout: 300000, // 5 minutes in milliseconds

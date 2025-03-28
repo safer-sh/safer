@@ -1,6 +1,6 @@
 {
   "name": "@safer-sh/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP interface for Safer wallet",
   "main": "index.js",
   "bin": {
@@ -11,10 +11,11 @@
     "build": "chmod +x ./index.js"
   },
   "dependencies": {
-    "@safer-sh/core": "^0.1.0",
-    "@safer-sh/common": "^0.1.0",
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "zod": "^3.22.4"
+    "@safer-sh/core": "0.1.1",
+    "@safer-sh/common": "0.1.1",
+    "@safer-sh/ledger-signer": "0.1.1",
+    "@modelcontextprotocol/sdk": "1.7.0",
+    "zod": "3.22.4"
   },
   "repository": {
     "type": "git",

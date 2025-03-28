@@ -371,7 +371,7 @@ class FileTransactionManager {
     
     // Create serializable object (exclude methods)
     const fileData = {
-      version: '0.1.0', // For future compatibility
+      version: '0.1.1', // For future compatibility
       type: 'SaferTransaction',
       data: {
         hash: transaction.hash,

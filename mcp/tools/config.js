@@ -147,7 +147,8 @@ function getNextStepsForConfig(config) {
   
   // Check if wallets are configured
   if (config.wallets.count === 0) {
-    steps.push("Add an owner wallet: safer_wallet add --name <name> --type privkey --private-key <private-key>");
+    steps.push("Add a ledger wallet (recommended for security): safer_wallet add --name <name> --type ledger");
+    steps.push("CAUTION: For testing only - Add a private key wallet (keys stored in plaintext): safer_wallet add --name <name> --type privkey --private-key <private-key>");
   }
   
   // If everything is configured, suggest next actions
@@ -195,6 +196,13 @@ async function handleSetConfig(params) {
     
     // If no parameters provided, show message
     if (changes.length === 0) {
+      // Get available networks for display
+      const { NETWORKS } = require('@safer-sh/common/constants');
+      const availableNetworks = Object.values(NETWORKS)
+        .filter(network => network.name) // Ensure name is defined
+        .map(network => `${network.name}: ${network.label}`)
+        .join(', ');
+      
       return {
         content: [{
           type: "text",
@@ -202,8 +210,8 @@ async function handleSetConfig(params) {
             success: false,
             message: "No configuration parameters provided.",
             availableParams: {
-              chain: "Network name (e.g., mainnet, goerli, sepolia)",
-              rpcUrl: "RPC endpoint URL",
+              chain: "Network name (available networks: " + availableNetworks + ")",
+              rpcUrl: "RPC endpoint URL (find public RPC URLs at https://chainlist.org)",
               defaultSafe: "Default Safe address"
             },
             example: "safer_config set --chain sepolia --rpc-url https://ethereum-sepolia.publicnode.com"
@@ -257,7 +265,8 @@ function getSuggestedNextSteps(config) {
   
   // If basic configuration is complete, suggest next actions
   if (config.chain && config.rpcUrl && config.defaultSafe) {
-    steps.push("Add owner wallets: safer_wallet add --name <name> --type privkey --private-key <key>");
+    steps.push("Add a ledger wallet (recommended for security): safer_wallet add --name <name> --type ledger");
+    steps.push("CAUTION: For testing only - Add a private key wallet (keys stored in plaintext): safer_wallet add --name <name> --type privkey --private-key <key>");
     steps.push("View Safe information: safer_admin getInfo --safe-address <address>");
     steps.push("Create a transaction: safer_transaction createEthTransfer --recipient <address> --amount <amount>");
   }

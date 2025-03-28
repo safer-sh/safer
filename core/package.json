@@ -1,13 +1,13 @@
 {
   "name": "@safer-sh/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core functionality for SAFER wallet",
   "main": "index.js",
   "dependencies": {
-    "@safe-global/protocol-kit": "^1.3.0",
-    "@safe-global/safe-core-sdk-types": "^2.3.0",
-    "@safe-global/safe-ethers-lib": "^1.9.4",
-    "ethers": "^5.7.2"
+    "@safe-global/protocol-kit": "1.3.0",
+    "@safe-global/safe-core-sdk-types": "2.3.0",
+    "@safe-global/safe-ethers-lib": "1.9.4",
+    "ethers": "5.7.2"
   },
   "scripts": {
     "build": "echo 'No build step required for core'"

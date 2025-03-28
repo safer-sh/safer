@@ -245,7 +245,7 @@ class IPFSTransactionManager {
           } else {
             // It might be the transaction data directly, wrap it in the expected format
             fileContent = JSON.stringify({
-              version: '0.1.0',
+              version: '0.1.1',
               type: 'SaferTransaction',
               data: response
             });

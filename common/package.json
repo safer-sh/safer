@@ -1,11 +1,11 @@
 {
   "name": "@safer-sh/common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Common utilities and configuration for SAFER wallet",
   "main": "index.js",
   "type": "commonjs",
   "dependencies": {
-    "ethers": "^5.7.2"
+    "ethers": "5.7.2"
   },
   "scripts": {
     "build": "echo 'No build step required for common'"

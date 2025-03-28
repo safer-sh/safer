@@ -19,7 +19,7 @@ const handleTransactions = require('./commands/transactions');
 const handleInfo = require('./commands/info');
 
 // Version information
-program.version('0.1.0');
+program.version('0.1.1');
 
 // Add description with dev warning
 const devWarning = `

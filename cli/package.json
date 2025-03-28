@@ -1,17 +1,17 @@
 {
   "name": "@safer-sh/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI for SAFER wallet",
   "main": "index.js",
   "bin": {
     "safer": "./index.js"
   },
   "dependencies": {
-    "@safer-sh/core": "^0.1.0",
-    "@safer-sh/common": "^0.1.0",
-    "@safer-sh/ledger-signer": "^0.1.0",
-    "commander": "^13.0.0",
-    "ethers": "^5.7.2"
+    "@safer-sh/core": "0.1.1",
+    "@safer-sh/common": "0.1.1",
+    "@safer-sh/ledger-signer": "0.1.1",
+    "commander": "13.0.0",
+    "ethers": "5.7.2"
   },
   "scripts": {
     "build": "chmod +x ./index.js"

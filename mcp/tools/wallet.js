@@ -11,24 +11,27 @@ const { ethers } = require('ethers');
  * @param {Object} server MCP server instance
  */
 function registerWalletTools(server) {
-  // Unified wallet management tool
+  // Unified wallet management
   server.tool(
     "safer_wallet",
     {
-      action: z.enum(["add", "remove", "list"]),
-      // Add wallet parameters
+      action: z.enum(["add", "list", "remove"]),
+      // Action-specific parameters
+      // For add
       name: z.string().optional(),
       type: z.enum(["privkey", "ledger"]).optional(),
+      // For privkey type
       privateKey: z.string().optional(),
+      // For ledger type
       derivationPath: z.string().optional(),
       accountIndex: z.number().optional(),
-      // Remove wallet parameters
+      // For both (used in different ways)
       ownerAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional()
     },
     async (params) => {
-      const { action, ...actionParams } = params;
-      
       try {
+        const { action, ...actionParams } = params;
+        
         switch (action) {
           case "add":
             return await handleAddWallet(actionParams);
@@ -37,7 +40,25 @@ function registerWalletTools(server) {
           case "list":
             return await handleListWallets();
           default:
-            throw new Error(`Unknown action: ${action}`);
+            // Provide helpful wallet guidance if action is not specified
+            const walletGuidance = `
+Here's how to use safer wallet commands:
+
+1. To list all wallets:
+   safer_wallet list
+
+2. To add a hardware wallet (RECOMMENDED for security):
+   safer_wallet add --name "My Ledger" --type ledger --derivation-path "live" --account-index 0
+
+3. To add a private key wallet (FOR TESTING ONLY):
+   ⚠️ SECURITY WARNING: Private keys are stored in plaintext
+   ⚠️ ONLY use this for testnets, NEVER for real assets
+   safer_wallet add --name "Test Wallet" --type privkey --private-key <your-private-key>
+
+4. To remove a wallet:
+   safer_wallet remove --owner-address <wallet-address>
+`;
+            throw new Error(`Unknown action: ${action}. ${walletGuidance}`);
         }
       } catch (error) {
         return {
@@ -85,20 +106,14 @@ function getFullDerivationPath(derivationPath, accountIndex) {
  */
 async function handleAddWallet({ name, type, privateKey, derivationPath, accountIndex, ownerAddress }) {
   try {
-    // Validate required parameters
+    // Validate required fields
     if (!type) {
-      // Provide detailed guidance on adding a wallet
-      let walletGuidance = `
-To add a new wallet, please provide the following information:
+      const walletGuidance = `
+Please specify the wallet type and required parameters:
 
-1. Wallet Type (required):
-   - For hardware wallets: "ledger"
-   - For private key wallets: "privkey"
-
-2. Wallet Name (optional):
-   - A friendly name to identify this wallet
-
-3. For Ledger Hardware Wallets:
+1. For Ledger Hardware Wallets (RECOMMENDED for security):
+   safer_wallet add --name "My Ledger" --type ledger --derivation-path "live" --account-index 0
+   
    - Derivation Path: Can be one of the following:
      * "live" - Ledger Live path (BIP44 standard: m/44'/60'/x'/0/0)
      * "legacy" - Legacy Ledger path (m/44'/60'/0'/x)
@@ -106,12 +121,10 @@ To add a new wallet, please provide the following information:
    - Account Index: A number (usually 0, 1, 2, etc.) representing the account number
    - Make sure your Ledger device is connected, unlocked, and has the Ethereum app open
 
-4. For Private Key Wallets:
-   - Wallet Name: Give this wallet an easily recognizable name
-   - Private Key: Your Ethereum private key (with or without 0x prefix)
-   
-   ⚠️ SECURITY WARNING: Never import private keys that control real assets.
-   ⚠️ Private keys are stored locally but may be exposed. Use for testing only.
+2. For Private Key Wallets (FOR TESTING ONLY):
+   ⚠️ SECURITY WARNING: Private keys are stored in plaintext
+   ⚠️ ONLY use this for testnets, NEVER for real assets
+   safer_wallet add --name "Test Wallet" --type privkey --private-key <your-private-key>
 `;
 
       throw new Error(`Wallet type is required. ${walletGuidance}`);
@@ -131,16 +144,16 @@ To add a new wallet, please provide the following information:
     if (type === 'privkey') {
       if (!privateKey) {
         const privateKeyWarning = `
-To add a private key wallet, you need to provide the following information:
+⚠️ SECURITY WARNING: PRIVATE KEYS ARE STORED IN PLAINTEXT ⚠️
 
-1. Wallet Name: Give this wallet an easily recognizable name
+Private key wallets should ONLY be used for testing on testnets - NEVER for real assets!
+
+To add a private key wallet, you need to provide:
+1. Wallet Name: An easily recognizable name
 2. Private Key: Your Ethereum private key (with or without 0x prefix)
 
-⚠️ SECURITY WARNING: Please remember, never import private keys that control real assets.
-⚠️ Private keys are stored locally but may be exposed. Use for testing purposes only.
-
-Please provide this information, and I will help you add the private key wallet.
-After adding, we can set it as an owner of your Safe.`;
+For production use and real assets, please use a hardware wallet instead:
+safer_wallet add --name "My Ledger" --type ledger --derivation-path "live" --account-index 0`;
 
         throw new Error(`Private key is required for private key wallet. ${privateKeyWarning}`);
       }
@@ -216,7 +229,9 @@ After adding, we can set it as an owner of your Safe.`;
         type: "text",
         text: JSON.stringify({
           success: true,
-          message: `${type === 'privkey' ? 'Private key' : 'Ledger'} wallet '${walletConfig.name}' added successfully`,
+          message: type === 'privkey' 
+            ? `Private key wallet '${walletConfig.name}' added successfully - ⚠️ REMEMBER: This should only be used for testing!` 
+            : `Ledger wallet '${walletConfig.name}' added successfully`,
           wallet: {
             address: walletConfig.address,
             type: walletConfig.type,
@@ -237,12 +252,12 @@ After adding, we can set it as an owner of your Safe.`;
     const errorMessage = error.message;
     let suggestion = '';
     
-    if (errorMessage.includes('private key')) {
-      suggestion = 'Make sure your private key is valid, 64 characters long, and includes the 0x prefix if needed. ⚠️ WARNING: Never import private keys that control real assets.';
-    } else if (errorMessage.includes('derivation path')) {
+    if (errorMessage.includes('derivation path')) {
       suggestion = 'Standard derivation paths are "live" (Ledger Live) or "legacy" (older Ledger).';
     } else if (errorMessage.includes('Ledger')) {
       suggestion = 'Make sure your Ledger is connected, unlocked, and has the Ethereum app open.';
+    } else if (errorMessage.includes('private key')) {
+      suggestion = '⚠️ WARNING: Make sure your private key is valid, 64 characters long, and includes the 0x prefix if needed. NEVER import private keys that control real assets - private keys are stored in plaintext and should ONLY be used for testing.';
     }
     
     return {
@@ -254,15 +269,15 @@ After adding, we can set it as an owner of your Safe.`;
           suggestion: suggestion,
           parameters: {
             name: 'A friendly name for the wallet',
-            type: 'Wallet type: "privkey" or "ledger"',
-            privateKey: 'Required for type "privkey" - WARNING: Use for testing only!',
+            type: 'Wallet type: "ledger" (recommended) or "privkey" (testing only)',
             derivationPath: 'Required for type "ledger" - Use "live" (Ledger Live) or "legacy" (older Ledger)',
             accountIndex: 'Optional account index for Ledger (default: 0)',
-            ownerAddress: 'Optional for Ledger wallets - will be derived from device if not provided'
+            ownerAddress: 'Optional for Ledger wallets - will be derived from device if not provided',
+            privateKey: 'Required for type "privkey" - ⚠️ WARNING: Use for testing only, keys are stored in plaintext!'
           },
           examples: [
-            'safer_wallet add --name "Main Wallet" --type privkey --private-key 0x1234...',
-            'safer_wallet add --name "Hardware Wallet" --type ledger --derivation-path "live" --account-index 1'
+            'safer_wallet add --name "Hardware Wallet" --type ledger --derivation-path "live" --account-index 0',
+            'safer_wallet add --name "Test Wallet" --type privkey --private-key 0x1234... (FOR TESTING ONLY)'
           ]
         }, null, 2)
       }],
