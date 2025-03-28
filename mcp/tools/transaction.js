@@ -101,6 +101,15 @@ async function handleCreateEthTransfer({ safeAddress, recipient, amount }) {
   // Get chain info from config
   const { chain, rpcUrl, chainId } = await configManager.readConfig();
   
+  // Validate network configuration
+  if (!chain || !chainId) {
+    throw new Error('Network chain not configured. Please set a chain with "safer_config set --chain <chain-name>"');
+  }
+  
+  if (!rpcUrl) {
+    throw new Error('RPC URL not configured. Please set an RPC URL with "safer_config set --rpc-url <url>"');
+  }
+  
   // Validate parameters
   if (!safeAddress) {
     throw new Error('Safe address is required. Please provide a valid Safe address.');
@@ -185,7 +194,30 @@ async function handleCreateEthTransfer({ safeAddress, recipient, amount }) {
  */
 async function handleCreateErc20Transfer({ safeAddress, tokenAddress, recipient, amount }) {
   // Get chain info from config
-  const { rpcUrl, chainId } = await configManager.readConfig();
+  const { chain, rpcUrl, chainId } = await configManager.readConfig();
+
+  // Validate network configuration
+  if (!chain || !chainId) {
+    throw new Error('Network chain not configured. Please set a chain with "safer_config set --chain <chain-name>"');
+  }
+  
+  if (!rpcUrl) {
+    throw new Error('RPC URL not configured. Please set an RPC URL with "safer_config set --rpc-url <url>"');
+  }
+  
+  // Validate parameters
+  if (!safeAddress) {
+    throw new Error('Safe address is required. Please provide a valid Safe address.');
+  }
+  if (!tokenAddress) {
+    throw new Error('Token address is required. Please provide a valid token address.');
+  }
+  if (!recipient) {
+    throw new Error('Recipient address is required. Please provide a valid recipient address.');
+  }
+  if (!amount) {
+    throw new Error('Amount is required. Please provide a valid amount to transfer.');
+  }
 
   // Create transaction
   const result = await services.transactionService.createErc20TransferTx({

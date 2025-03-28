@@ -35,13 +35,27 @@ class FileConfigManager {
         defaultSafe: null, 
         rpcUrl: null,
         chain: null,
+        chainId: null,
         owners: []  // Initialize empty owners array
       };
     }
     
     try {
       const config = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
-      config.chainId = parseChain(config.chain).chainId;
+      
+      // Only attempt to parse chainId if chain is set
+      if (config.chain) {
+        const parsedChain = parseChain(config.chain);
+        config.chainId = parsedChain.chainId;
+        
+        // Explicit check to ensure chainId is valid
+        if (!config.chainId) {
+          config.chainIdError = `Unable to resolve chainId for network: ${config.chain}`;
+        }
+      } else {
+        config.chainId = null;
+      }
+      
       return config;
     } catch (error) {
       throw new Error(`Unable to read configuration file: ${error.message}`);

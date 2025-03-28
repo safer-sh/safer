@@ -34,8 +34,13 @@ async function initializeSafeSDK(params) {
     forceNew = false
   } = params;
   
+  // Validate chainId is provided
+  if (!chainId) {
+    throw new Error('Chain ID is required for Safe SDK initialization. Please configure a network.');
+  }
+  
   // Create a cache key based on parameters
-  const cacheKey = `${chainId || 'unknown'}:${safeAddress || 'no-safe'}:${readOnly}`;
+  const cacheKey = `${chainId}:${safeAddress || 'no-safe'}:${readOnly}`;
   
   // Check if we already have an instance and should reuse it
   if (!forceNew && sdkInstances[cacheKey]) {

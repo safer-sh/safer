@@ -294,11 +294,8 @@ async function getChainInfo(options) {
         chainName = chainInfo.networkName;
         rpcUrl = defaultRpcUrl;
       } else {
-        // Use default chain from DEFAULTS
-        const chainInfo = parseChain(DEFAULTS.CHAIN_NAME);
-        chainId = chainInfo.chainId || DEFAULTS.CHAIN_ID;
-        chainName = chainInfo.networkName || DEFAULTS.CHAIN_NAME;
-        rpcUrl = defaultRpcUrl;
+        // Remove fallback to DEFAULTS and throw an error instead
+        throw new Error('Network chain not configured. Please set a chain with "safer config --set-chain <chain>"');
       }
     }
     
@@ -310,6 +307,11 @@ async function getChainInfo(options) {
   
   if (!rpcUrl) {
     throw new Error('No RPC URL available. Please use --rpc-url parameter, set --chain, or configure default RPC URL');
+  }
+
+  // Validate that we have a valid chainId
+  if (!chainId) {
+    throw new Error(`Invalid or unsupported chain: ${chainName}. Please configure a supported network.`);
   }
   
   return { chainId, chainName, rpcUrl };

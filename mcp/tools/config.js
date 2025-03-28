@@ -75,6 +75,12 @@ async function handleGetConfig() {
   try {
     // Adapt to synchronous API - direct call without await
     const config = configManager.readConfig();
+    
+    // Check for chain ID errors
+    if (config.chainIdError) {
+      throw new Error(config.chainIdError);
+    }
+    
     const owners = configManager.getOwners();
     
     // Format configuration for display
