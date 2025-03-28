@@ -99,7 +99,7 @@ async function handleAddOwner({ safeAddress, newOwnerAddress, threshold }) {
       rpcUrl,
       chainId,
       newOwnerAddress,
-      threshold: parseInt(threshold)
+      threshold
     });
     
     // Save transaction
@@ -143,7 +143,7 @@ async function handleRemoveOwner({ safeAddress, ownerAddress, threshold }) {
       rpcUrl,
       chainId,
       ownerAddress,
-      threshold: parseInt(threshold)
+      threshold
     });
     
     // Save transaction
@@ -186,7 +186,7 @@ async function handleChangeThreshold({ safeAddress, threshold }) {
       safeAddress,
       rpcUrl,
       chainId,
-      threshold: parseInt(threshold)
+      threshold
     });
     
     // Save transaction

@@ -123,7 +123,8 @@ class SafeService {
         oldThreshold: currentThreshold,
         newThreshold: threshold,
         owners: [...currentOwners, newOwnerAddress]
-      }
+      },
+      chainId
     };
 
     return SaferTransaction.fromSafeSDKTransaction(result);
@@ -220,6 +221,10 @@ class SafeService {
    */
   async createChangeThresholdTx(params) {
     const { safeAddress, rpcUrl, chainId, threshold } = params;
+
+    if(!isNumber(threshold)) {
+      throw new InvalidParameterError('threshold', 'Threshold must be a number');
+    }
     
     // Initialize Safe SDK (read-only mode)
     const { safeSdk } = await initializeSafeSDK({
