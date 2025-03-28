@@ -12,6 +12,7 @@ const { services } = require('@safer-sh/core');
 const { z } = require('zod');
 const { resolveOwnerFromIdentifier, initializeSigner } = require('@safer-sh/common/config/utils');
 const { ethers } = require('ethers');
+const { TRANSACTION_STATUS } = require('@safer-sh/core');
 
 /**
  * Register transaction tools to the server
@@ -391,19 +392,43 @@ async function handleExecuteTransaction({
     // Save executed transaction
     await transactionManager.saveTransaction(executedTransaction);
     
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify({
-          success: true,
-          message: `Transaction executed successfully by ${ownerConfig.address}`,
-          txHash: executedTransaction.hash,
-          safeAddress: targetSafeAddress,
-          executorAddress: ownerConfig.address,
-          transactionHash: executedTransaction.metadata.transactionHash
-        }, null, 2)
-      }]
-    };
+    // Check the transaction status to determine if it was successful
+    if (executedTransaction.status === TRANSACTION_STATUS.SUCCESSFUL) {
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            success: true,
+            message: `Transaction executed successfully by ${ownerConfig.address}`,
+            txHash: executedTransaction.hash,
+            safeAddress: targetSafeAddress,
+            executorAddress: ownerConfig.address,
+            transactionHash: executedTransaction.metadata.transactionHash
+          }, null, 2)
+        }]
+      };
+    } else {
+      // Handle different non-successful states
+      const errorMessage = executedTransaction.metadata.errorMessage || 
+                          executedTransaction.metadata.confirmationError ||
+                          executedTransaction.metadata.outerErrorMessage || 
+                          'Transaction was not successfully confirmed';
+      
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            success: false,
+            message: `Transaction execution issue: ${errorMessage}`,
+            txHash: executedTransaction.hash,
+            safeAddress: targetSafeAddress,
+            executorAddress: ownerConfig.address,
+            status: executedTransaction.status,
+            details: executedTransaction.metadata
+          }, null, 2)
+        }]
+      };
+    }
   } catch (error) {
     throw new Error(`Failed to execute transaction: ${error.message}`);
   }
